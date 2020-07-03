@@ -1,0 +1,11 @@
+all:
+  children:
+    # группа хостов workshops
+    workshops:
+      hosts:
+        workshop:
+          # IP-адрес хоста
+          # В рамках прохождения Workshop необходимо использовать свой удаленный сервер
+          ansible_host: dev.rb-cicd.express42.io
+          # имя пользователя для доступа на хост по SSH
+          ansible_user: ubuntu

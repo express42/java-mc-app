@@ -1,0 +1,137 @@
+- name: Insure Required Packages Are Installed
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - tar
+    - wget
+    - gcc
+    - make
+
+- name: Check If Already Installed
+  register: __apr_version_if_exists
+  ignore_errors: yes
+  changed_when: false
+  command: "{{ apr_install_location }}/bin/apr-1-config --version"
+
+- name: Set __apr_installed if already configured
+  set_fact:
+    __apr_installed: "{% if __apr_version_if_exists|failed %}false{% else %}{{ __apr_version_if_exists.stdout == apr_version }}{% endif %}"
+
+- name: Create Temporary Storage Location
+  when: not __apr_installed
+  file:
+    state: directory
+    path: "{{ apr_tmp_storage }}"
+
+- name: Download APR
+  when: not __apr_installed
+  get_url:
+    dest: "{{ apr_tmp_storage }}"
+    url: https://archive.apache.org/dist/apr/apr-1.5.4.tar.gz
+    # checksum: "{{ apr_version_specific[apr_version].checksum }}"
+
+- name: Unpack APR
+  when: not __apr_installed
+  unarchive:
+    remote_src: yes
+    src: "{{ apr_tmp_storage }}/{{ apr_tar_archive }}"
+    dest: "{{ apr_tmp_storage }}"
+    keep_newer: yes
+
+- name: Configure APR
+  when: not __apr_installed
+  register: __apr_configure
+  command: >
+    ./configure
+    --prefix={{ apr_install_location }}
+    chdir={{ apr_tmp_storage }}/{{ apr_name}}
+
+- name: Debug Output of APR Configure
+  debug: var=__apr_configure.stdout_lines
+  when:
+    - apr_debug
+    - not __apr_installed
+
+- name: Make APR
+  when: not __apr_installed
+  register: __apr_make
+  make:
+    chdir: "{{ apr_tmp_storage }}/{{ apr_name }}"
+
+- name: Debug Output of Make APR
+  debug: var=__apr_make.stdout_lines
+  when:
+    - apr_debug
+    - not __apr_installed
+
+- name: Make Install APR
+  when: not __apr_installed
+  register: __apr_make_install
+  make:
+    chdir: "{{ apr_tmp_storage }}/{{ apr_name }}"
+    target: install
+  become: yes
+
+- name: Debug Output of Make Install APR
+  debug: var=__apr_make_install.stdout_lines
+  when:
+    - apr_debug
+    - not __apr_installed
+
+- name: Download APR Utils
+  when: not __apr_installed
+  get_url:
+    dest: "{{ apr_tmp_storage }}"
+    url: https://archive.apache.org/dist/apr/apr-util-1.5.4.tar.gz
+    # checksum: "{{ apr_util_version_specific[apr_util_version].checksum }}"
+
+- name: Unpack APR Utils
+  when: not __apr_installed
+  unarchive:
+    remote_src: yes
+    src: "{{ apr_tmp_storage}}/{{ apr_util_tar_archive}}"
+    dest: "{{ apr_tmp_storage }}"
+    keep_newer: yes
+
+- name: Configure APR Utils
+  when: not __apr_installed
+  register: __apr_utils_configure
+  command: >
+    ./configure
+    --prefix={{ apr_install_location }}
+    --with-apr={{ apr_install_location }}
+    --with-openssl={{ openssl_install_location }}
+    chdir={{ apr_tmp_storage }}/{{ apr_util_name}}
+
+- name: Deubg Output of Configure APR Utils
+  debug: var=__apr_utils_configure.stdout_lines
+  when:
+    - apr_debug
+    - not __apr_installed
+
+- name: Make APR Utils
+  when: not __apr_installed
+  register: __apr_utils_make
+  make:
+    chdir: "{{ apr_tmp_storage }}/{{ apr_util_name }}"
+
+- name: Debug Output of Make APR Utils
+  debug: var=__apr_utils_make.stdout_lines
+  when:
+    - apr_debug
+    - not __apr_installed
+
+- name: Make Install APR Utils
+  when: not __apr_installed
+  register: __apr_utils_make_install
+  make:
+    chdir: "{{ apr_tmp_storage }}/{{ apr_util_name }}"
+    target: install
+  become: yes
+
+- name: Debug Output of Make Install APR Utils
+  debug: var=__apr_utils_make_install.stdout_lines
+  when:
+    - apr_debug
+    - not __apr_installed

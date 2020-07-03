@@ -1,0 +1,4 @@
+version=0.0.1
+build=20181120-1
+vcstag=0.0.1
+protocol=0.0.1

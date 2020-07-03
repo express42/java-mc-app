@@ -1,0 +1,55 @@
+---
+- name: Download system repository artifact locally
+  become: false
+  local_action:
+    module: maven_artifact
+    group_id: "{{ lookup('env','GROUP_ID') }}"
+    artifact_id: "{{ lookup('env','PROJECT') }}"
+    classifier: distributive
+    extension: war
+    dest: /tmp
+    repository_url: "http://nexus.rb-cicd.express42.io:8081/repository/workshop-application/"
+    validate_certs: no
+    version: "{{ workshop_nexus_artifact_version }}"
+    keep_name: yes
+    username: "{{ lookup('env','NEXUS_USER') }}"
+    password: "{{ lookup('env','NEXUS_PASS') }}"
+  register: system_repository_download_result_local
+  tags:
+    - download
+
+- name: Check if app home directory exists
+  file:
+    # путь к директории берется из переменной workshop_war_path
+    path: "{{ workshop_war_path }}"  
+    state: directory
+    mode: 0755
+
+- name: Copy system repository from local to remote
+  copy:
+    src: "{{ system_repository_download_result_local.dest }}"
+    dest: "{{ workshop_war_path }}/workshop-{{ workshop_nexus_artifact_version }}.war"
+  when: system_repository_download_result_local.dest is defined
+  register: system_repository_download_result_remote
+
+# - name: Copy system repository from local to remote
+#   copy:
+#     src: "{{ system_repository_download_result_local.dest }}"
+#     dest: "{{ workshop_war_path }}/workshop-{{ workshop_nexus_artifact_version }}.war"
+#   when: system_repository_download_result_local.dest is defined
+#   register: system_repository_download_result_remote
+
+# - name: Ansible delete old distribs using wildcard
+#   # ищем все версии артефакта и регестрируем их в переменной wildcard_files_to_delete
+#   find:
+#     paths: "{{ workshop_war_path }}"
+#     patterns: "workshop-*"
+#     file_type: any
+#   register: wildcard_files_to_delete
+
+# - name: Ansible remove file wildcard
+#   # удаляем все версии кроме крайней
+#   file:
+#     path: "{{ item }}"
+#     state: absent
+#   with_items:  "{{ (wildcard_files_to_delete.files | sort(attribute='path', reverse=True) | map(attribute='path') | list)[1:] }}"

@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  remote_user: root
+  vars:
+    openssl_debug: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=yes
+      changed_when: False
+      when: ansible_os_family == 'Debian'
+  roles:
+    - role_under_test

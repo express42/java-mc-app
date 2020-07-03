@@ -1,0 +1,11 @@
+---
+- src: git+https://bitbucket.trosbank.trus.tsocgen/scm/cicd/ansible-role-apr.git
+  name: ansible-role-apr
+- src: git+https://bitbucket.trosbank.trus.tsocgen/scm/cicd/ansible-role-nginx.git
+  name: ansible-role-nginx
+- src: git+https://bitbucket.trosbank.trus.tsocgen/scm/cicd/ansible-role-universal-tomcat.git
+  name: ansible-role-universal-tomcat
+- src: git+https://bitbucket.trosbank.trus.tsocgen/scm/cicd/java-ansible-role.git
+  name: java-ansible-role
+- src: git+https://bitbucket.trosbank.trus.tsocgen/scm/cicd/ansible-role-openssl.git
+  name: ansible-role-openssl

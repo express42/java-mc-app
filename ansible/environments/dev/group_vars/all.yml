@@ -1,0 +1,24 @@
+java_packages:
+  - java-1.8.0-openjdk
+
+tomcat_use_java: false
+tomcat_use_apr: false
+java_home: "/usr/lib/jvm/jre-1.8.0"
+workshop_war_path: /opt/tomcat/webapps/
+tomcat_users:
+  - name: tomcat
+    password: tomcat
+    roles: "manager-gui,admin-gui"
+
+nginx_install_epel_repo: False
+
+nginx_sites:
+ default:
+     - listen 80
+     - server_name _
+     - location / { proxy_pass http://127.0.0.1:8080; }
+
+openssl_install_location: /opt/openssl
+openssl_download_location: https://ftp.openssl.org/source/old/1.1.0/openssl-1.1.0f.tar.gz
+
+workshop_nexus_artifact_version: "-0.0.1-20200609-50-bfa31b8" # Подставляем версию артефакта, полкченную при сборке на предыдущем этапе

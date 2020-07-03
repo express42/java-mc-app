@@ -1,0 +1,20 @@
+---
+
+openssl_version: "1.1.0f"
+openssl_name: openssl-{{ openssl_version }}
+openssl_tar_archive: "{{ openssl_name }}.tar.gz"
+openssl_download_location: https://www.openssl.org/source/{{ openssl_tar_archive }}
+
+openssl_tmp_storage: /tmp/{{ openssl_name }}
+
+openssl_install_location: /opt/openssl
+openssl_rlib_location: "{{ openssl_install_location }}/lib"
+
+
+openssl_debug: false
+
+openssl_version_specific:
+  "1.0.2l":
+    checksum: sha256:ce07195b659e75f4e1db43552860070061f156a98bb37b672b101ba6e3ddf30c
+  "1.1.0f":
+    checksum: sha256:12f746f3f2493b2f39da7ecf63d7ee19c6ac9ec6a4fcd8c229da8a522cb12765

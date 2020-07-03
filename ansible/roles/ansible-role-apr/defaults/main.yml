@@ -1,0 +1,24 @@
+# Tomcat APR
+apr_tmp_storage: /tmp/{{ apr_name }}
+
+apr_version: "1.5.2"
+apr_name: apr-{{ apr_version }}
+apr_tar_archive: "{{ apr_name }}.tar.gz"
+
+
+apr_util_version: "1.5.4"
+apr_util_name: apr-util-{{ apr_util_version }}
+apr_util_tar_archive: "{{ apr_util_name }}.tar.gz"
+
+apr_install_location: /opt/apr
+
+apr_version_specific:
+  "1.5.2":
+    checksum: md5:b9da16a30507b8d952945ede08306f28
+
+apr_util_version_specific:
+  "1.5.4":
+    checksum: md5:866825c04da827c6e5f53daff5569f42
+
+
+apr_debug: false

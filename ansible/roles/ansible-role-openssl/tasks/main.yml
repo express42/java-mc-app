@@ -1,0 +1,107 @@
+---
+
+- name: Insure Required Packages Are Installed
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - tar
+    - wget
+    - gcc
+    - make
+    - perl
+
+- name: Check OpenSSL Install State
+  register: __openssl_version
+  ignore_errors: true
+  changed_when: false
+  shell: >
+    {{ openssl_install_location }}/bin/openssl version
+
+- name: Debug OpenSSL Version Check
+  debug: var=__openssl_version
+  when: openssl_debug
+
+- name: Set Installed
+  set_fact:
+    __openssl_installed: "{% if __openssl_version|failed%}false{% elif __openssl_version.stdout.find(openssl_version) == -1 %}false{% else %}true{% endif %}"
+
+- name: Debug OpenSSL Set Installed
+  debug: var=__openssl_installed
+  when: openssl_debug
+
+- name: Create Temporary Storage Location
+  when: not __openssl_installed
+  file:
+    state: directory
+    path: "{{ openssl_tmp_storage }}"
+
+- name: Download OpenSSL
+  when: not __openssl_installed
+  get_url:
+    dest: "{{ openssl_tmp_storage }}"
+    url: "{{ openssl_download_location }}"
+    checksum: "{{ openssl_version_specific[openssl_version].checksum }}"
+
+- name: Unpack OpenSSL
+  when: not __openssl_installed
+  unarchive:
+    remote_src: yes
+    src: "{{ openssl_tmp_storage }}/{{ openssl_tar_archive }}"
+    dest: "{{ openssl_tmp_storage }}"
+    keep_newer: yes
+
+- name: Configure OpenSSL
+  when: not __openssl_installed
+  register: __openssl_configure
+  command: ./config -Wl,--enable-new-dtags,-rpath={{ openssl_rlib_location }} --prefix={{ openssl_install_location }} --openssldir={{ openssl_install_location }}
+  args:
+    chdir: "{{ openssl_tmp_storage }}/{{ openssl_name}}"
+
+- name: Debug Output of Configure OpenSSL
+  debug: var=__openssl_configure.stdout_lines
+  when:
+    - openssl_debug
+    - not __openssl_installed
+
+- name: Make OpenSSL
+  when: not __openssl_installed
+  register: __openssl_make
+  make:
+    chdir: "{{ openssl_tmp_storage }}/{{ openssl_name }}"
+
+- name: Debug Output of Make OpenSSL
+  debug: var=__openssl_make.stdout_lines
+  when:
+    - openssl_debug
+    - not __openssl_installed
+
+- name: Make Test OpenSSL
+  when:
+    - openssl_debug
+    - not __openssl_installed
+  register: __openssl_make_test
+  ignore_errors: true
+  make:
+    chdir: "{{ openssl_tmp_storage }}/{{ openssl_name }}"
+    target: test
+
+- name: Debug Output of Make Install OpenSSL
+  debug: var=__openssl_make_test.stdout_lines
+  when:
+    - openssl_debug
+    - not __openssl_installed
+
+- name: Make Install OpenSSL
+  when: not __openssl_installed
+  register: __openssl_make_install
+  make:
+    chdir: "{{ openssl_tmp_storage }}/{{ openssl_name }}"
+    target: install
+  become: yes
+
+- name: Debug Output of Make Install OpenSSL
+  debug: var=__openssl_make_install.stdout_lines
+  when:
+    - openssl_debug
+    - not __openssl_installed

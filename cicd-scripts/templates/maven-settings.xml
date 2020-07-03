@@ -1,0 +1,20 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <localRepository>/${env.HOME}/.m2/repository</localRepository>
+    <mirrors>
+        <mirror>
+            <id>nexus</id>
+            <name>mirror of remote repositories</name>
+            <mirrorOf>*</mirrorOf>
+            <url>http://${env.NEXUS_BASE_URL}/repository/${env.URL_GROUP_ID}-group</url>
+        </mirror>
+    </mirrors>
+    <servers>
+        <server>
+            <id>nexus</id>
+            <username>${env.NEXUS_USER}</username>
+            <password><![CDATA[${env.NEXUS_PASS}]]></password>
+        </server>
+    </servers>
+</settings>

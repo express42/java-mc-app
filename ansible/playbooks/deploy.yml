@@ -1,0 +1,12 @@
+---
+- name: Install WorkShop Application
+  # получаем root доступ
+  become: true
+  # плейбук выполняется на хостах группы workshops
+  hosts: workshops
+  roles:
+    - java-ansible-role
+    - ansible-role-nginx
+    - ansible-role-apr
+    - ansible-role-universal-tomcat
+    - workshop-app
