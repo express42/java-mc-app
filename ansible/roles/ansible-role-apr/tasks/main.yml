@@ -28,7 +28,7 @@
   when: not __apr_installed
   get_url:
     dest: "{{ apr_tmp_storage }}"
-    url: https://archive.apache.org/dist/apr/apr-1.5.4.tar.gz
+    url: https://archive.apache.org/dist/apr/apr-1.5.2.tar.gz
     # checksum: "{{ apr_version_specific[apr_version].checksum }}"
 
 - name: Unpack APR

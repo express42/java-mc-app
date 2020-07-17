@@ -4,6 +4,26 @@
   become: true
   # плейбук выполняется на хостах группы workshops
   hosts: workshops
+
+  pre_tasks:
+    - name: Install dependencies
+      delegate_to: localhost
+      yum:
+        name:
+          - python
+          - python-pip
+          - python-setuptools
+          - libxml2
+          - libxslt
+        state: latest
+        update_cache: True
+
+    - name: Install required pip packages
+      delegate_to: localhost
+      pip:
+        name:
+          - lxml
+
   roles:
     - java-ansible-role
     - ansible-role-nginx

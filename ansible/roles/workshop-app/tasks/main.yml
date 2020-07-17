@@ -8,7 +8,7 @@
     classifier: distributive
     extension: war
     dest: /tmp
-    repository_url: "http://nexus.rb-cicd.express42.io:8081/repository/workshop-application/"
+    repository_url: "http://nexus.vtb-cicd.express42.io:8081/repository/workshop-application/"
     validate_certs: no
     version: "{{ workshop_nexus_artifact_version }}"
     keep_name: yes

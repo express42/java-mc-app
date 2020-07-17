@@ -6,6 +6,6 @@ all:
         workshop:
           # IP-адрес хоста
           # В рамках прохождения Workshop необходимо использовать свой удаленный сервер
-          ansible_host: dev.rb-cicd.express42.io
+          ansible_host: dev.vtb-cicd.express42.io
           # имя пользователя для доступа на хост по SSH
           ansible_user: ubuntu

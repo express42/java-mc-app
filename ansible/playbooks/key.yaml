@@ -1,0 +1,22 @@
+---
+- name: create
+  # получаем root доступ
+  become: true
+  # плейбук выполняется на хостах деплой агентов
+  hosts: localhost
+  connection: local
+
+  vars_files:
+    - ../vault.yml
+  tasks:
+    - name: Add ssh key to file
+      copy:
+        content="{{ ssh_key_deploy }}"
+        dest=/tmp/id_rsa
+    - name: Change file ownership, group and permissions
+      delegate_to: localhost
+      file:
+        path: /tmp/id_rsa
+        owner: 999
+        group: 998
+        mode: 0600
