@@ -7,7 +7,7 @@
   connection: local
 
   vars_files:
-    - ../vault.yml
+    - ../ssh_key.yml
   tasks:
     - name: Add ssh key to file
       copy:

@@ -17,4 +17,4 @@ docker run --rm \
     --net=host \
     -w /src \
     "${JDK_IMAGE}" \
-    -c "/bin/sh ./gradlew -I ./jenkins/templates/init.gradle $* "
+    -c "/bin/sh ./gradlew -I ./cicd-scripts/templates/init.gradle $* "
