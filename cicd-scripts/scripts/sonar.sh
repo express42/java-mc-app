@@ -4,7 +4,7 @@ cat <<EOG > /tmp/src/sonar.properties
 sonar.projectKey=$SONAR_PROJECT_KEY
 sonar.projectName=$SONAR_PROJECT_NAME
 sonar.projectVersion=$ARTIFACT_VERSION
-sonar.host.url=http://sonarqube.vtb-cicd.express42.io/
+sonar.host.url=http://sonarqube.vtb-cicd.express42.io:9000/
 sonar.modules=src
 sonar.sources=main
 sonar.java.binaries=../build/classes,../build/libs
