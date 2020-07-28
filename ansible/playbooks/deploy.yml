@@ -8,6 +8,7 @@
   pre_tasks:
     - name: Install dependencies
       delegate_to: localhost
+      become: false
       yum:
         name:
           - python
@@ -20,6 +21,7 @@
 
     - name: Install required pip packages
       delegate_to: localhost
+      become: false
       pip:
         name:
           - lxml
