@@ -1,7 +1,5 @@
 ---
 - name: create
-  # получаем root доступ
-  become: true
   # плейбук выполняется на хостах деплой агентов
   hosts: localhost
   connection: local
