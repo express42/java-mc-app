@@ -21,4 +21,4 @@ nginx_sites:
 openssl_install_location: /opt/openssl
 openssl_download_location: https://ftp.openssl.org/source/old/1.1.0/openssl-1.1.0f.tar.gz
 
-workshop_nexus_artifact_version: "0.0.ХХ" # Подставляем версию артефакта, полкченную при сборке на предыдущем этапе
+workshop_nexus_artifact_version: "1.0.ХХ" # Подставляем версию артефакта, полкченную при сборке на предыдущем этапе
